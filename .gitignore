@@ -1,0 +1,10 @@
+#ignorando a pasta que possui o ambiente virtual
+.venv/
+
+# Variaveis de Ambiente
+.env
+
+
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
