@@ -4,7 +4,12 @@
 # Variaveis de Ambiente
 .env
 
-
+#arquivos do Juyter e do Pyhton em execução sejam commitados
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+#ignorando dados locais de extensões de arquivos apenas para checagem
+*.csv
+*.xlsx
+*.zip
