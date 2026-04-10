@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Ficha de Aula | A Camada Silver</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+body{font-family:'Roboto',sans-serif;font-size:10pt;line-height:1.5;color:#000;background-color:#f4f4f4;margin:0;padding:0}
+.a4-page{width:21cm;min-height:29.7cm;padding:1.5cm;margin:1cm auto;border:1px solid #D0D0D0;background:white;box-shadow:0 0 5px rgba(0,0,0,.1)}
+.main-title{text-align:center;font-size:12pt;font-weight:bold;margin-bottom:20px;color:#000}
+.header-table{width:100%;border-collapse:collapse;margin-bottom:15px}
+.header-table td{border:1px solid #D0D0D0;padding:6px 10px;vertical-align:middle}
+.logo{width:100px}
+h2{font-size:12pt;color:#9B2BC7;border-bottom:2px solid #E0D449;padding-bottom:4px;margin-top:28px;margin-bottom:12px}
+.conceito-box{background-color:#f9f0ff;border-left:4px solid #9B2BC7;padding:10px 15px;margin:10px 0 12px 0;border-radius:0 4px 4px 0}
+.conceito-box p{margin:4px 0}
+.formula{font-weight:bold;background-color:#fff8dc;border:1px solid #E0D449;padding:6px 12px;display:inline-block;border-radius:4px;margin:4px 0}
+.exemplo-box{border:1px solid #9B2BC7;border-radius:4px;margin:12px 0;overflow:hidden}
+.exemplo-header{background-color:#9B2BC7;color:white;padding:5px 12px;font-weight:bold;font-size:9.5pt}
+.exemplo-body{padding:10px 15px}
+.exemplo-body p{margin:4px 0 8px 0}
+.passo{margin:5px 0 5px 8px;padding-left:10px;border-left:3px solid #E0D449}
+.exercicio-box{border:1px solid #cca800;border-radius:4px;margin:12px 0;overflow:hidden}
+.exercicio-header{background-color:#E0D449;color:#000;padding:5px 12px;font-weight:bold;font-size:9.5pt}
+.exercicio-body{padding:10px 15px;background-color:#fffef0}
+.destaque{color:#9B2BC7;font-weight:bold}
+.rep-table{width:100%;border-collapse:collapse;margin:10px 0 14px 0;font-size:10pt}
+.rep-table th{background-color:#9B2BC7;color:white;padding:6px 10px;text-align:center}
+.rep-table td{border:1px solid #D0D0D0;padding:5px 10px;text-align:center}
+.rep-table tr:nth-child(even) td{background-color:#f9f0ff}
+.obs{font-size:9pt;color:#555;margin-top:6px}
+.tag-nb{display:inline-block;background-color:#9B2BC7;color:white;font-size:8pt;font-weight:bold;padding:1px 7px;border-radius:3px;margin-bottom:5px}
+.code-box{background-color:#1e1e2e;color:#cdd6f4;font-family:'Courier New',monospace;font-size:8pt;padding:10px 14px;border-radius:4px;margin:8px 0;white-space:pre;line-height:1.6;overflow-x:auto}
+.ato-banner{background:linear-gradient(135deg,#9B2BC7,#7a1fa0);color:white;padding:8px 16px;border-radius:4px;margin:24px 0 14px 0}
+.ato-banner h3{margin:0;font-size:11pt}
+.ato-banner .tempo{font-size:9pt;opacity:.85;margin-top:2px}
+.aviso-box{background-color:#fff3cd;border-left:4px solid #E0D449;padding:8px 14px;margin:8px 0;border-radius:0 4px 4px 0;font-size:9.5pt}
+.professor-badge{display:inline-block;background-color:#c62828;color:white;font-size:8.5pt;font-weight:bold;padding:2px 8px;border-radius:3px;letter-spacing:.5px;vertical-align:middle;margin-left:8px}
+.gabarito-box{border:2px solid #2e7d32;border-radius:4px;margin:10px 0;overflow:hidden}
+.gabarito-header{background-color:#2e7d32;color:white;padding:5px 12px;font-weight:bold;font-size:9.5pt}
+.gabarito-body{padding:10px 15px;background-color:#f1f8e9}
+.espaco-resposta{border:1px dashed #bbb;border-radius:4px;min-height:160px;margin:8px 0;padding:10px;background-color:#fafafa;color:#bbb;font-family:'Courier New',monospace;font-size:8pt;white-space:pre}
+@media print{
+  body,.a4-page{margin:0;box-shadow:none;border:none;background-color:white}
+  .a4-page{width:auto;min-height:auto;padding:2cm 1.5cm}
+  .exercicio-box,.exemplo-box,.conceito-box,.gabarito-box{break-inside:avoid}
+  h2{break-after:avoid}
+}
+@page{size:A4;margin:1.5cm}
+</style>
+</head>
+<body>
+<div class="a4-page">
+<p class="main-title">Ficha de Aula &mdash; A Camada Silver | Prof. Me. Ivan Ribeiro Mello</p>
+<table class="header-table"><tr>
+  <td style="width:120px;text-align:center;">
+    <img src="https://fae.edu/_assets/img/logo/fae-black-134x75.jpg" alt="Logo FAE" class="logo">
+  </td>
+  <td><strong>Pipeline de Dados Financeiros</strong>&nbsp;|&nbsp;2026-01<br>
+  Tema: <strong>Da Bronze à Silver &mdash; Seleção, Deduplicação, Hierarquia e Validação Contábil</strong></td>
+</tr></table>
+
+<!-- ============================================================ ATO 1 -->
+<div class="ato-banner">
+  <h3>&#127919; ATO 1 &mdash; O Universo de Análise: Selecionando as Empresas</h3>
+  <div class="tempo">&#8987; ~10 min &nbsp;|&nbsp; Modo: professor fala</div>
+</div>
+
+<div class="conceito-box">
+  <p>A camada <strong>Silver</strong> é onde transformamos dado bruto em dado <em>usável</em>.
+  Antes de qualquer transformação, precisamos responder: <strong>sobre quais empresas vamos trabalhar?</strong></p>
+  <p>Não adianta processar todas as ~2.000 empresas registradas na CVM. Queremos apenas as que
+  têm ações negociadas em bolsa, estão em operação e possuem demonstrativos compatíveis
+  com nosso modelo de valuation.</p>
+</div>
+
+<h2>Os Três Filtros Obrigatórios</h2>
+<p style="margin-bottom:6px;">
+  <span class="formula">SIT = 'ATIVO' &nbsp;&amp;&amp;&nbsp; TP_MERC = 'BOLSA' &nbsp;&amp;&amp;&nbsp; SIT_EMISSOR = 'FASE OPERACIONAL'</span>
+</p>
+<div class="passo"><strong>SIT = 'ATIVO':</strong> empresa com registro ativo na CVM. Descarta extintas, canceladas ou em processo de encerramento.</div>
+<div class="passo"><strong>TP_MERC = 'BOLSA' &mdash; o filtro mais crítico:</strong> empresas com <code>TP_MERC = NULL</code> têm registro CVM mas <em>não negociam ações</em>. Exemplo: Votorantim Cimentos, registrada por debêntures. Sem cotação, P/L e EV/EBITDA são impossíveis de calcular.</div>
+<div class="passo"><strong>SIT_EMISSOR = 'FASE OPERACIONAL':</strong> exclui pré-operacionais e empresas em processo de regularização, cujos demonstrativos são incompletos ou não padronizados.</div>
+
+<h2>Setores Excluídos do Universo</h2>
+<p>Mesmo dentro da bolsa, alguns setores têm estrutura contábil incompatível com o Golden Schema de valuation operacional:</p>
+<table class="rep-table">
+  <tr><th>Setor (SETOR_ATIV)</th><th>Por que excluir?</th></tr>
+  <tr><td>Emp. Adm. Part (Holdings)</td><td>Ativos são participações &mdash; não há operação industrial</td></tr>
+  <tr><td>Banc (Bancos)</td><td>Regime prudencial: Passivo e Resultado estruturalmente diferentes; EBIT não faz sentido</td></tr>
+  <tr><td>Segurad (Seguradoras)</td><td>Receita de prêmios e reservas técnicas não são compatíveis com a DRE padrão</td></tr>
+  <tr><td>Financeira, Securitiz, Adm. Imóveis</td><td>Estrutura contábil incompatível com o modelo de valuation operacional</td></tr>
+</table>
+
+<div class="aviso-box">
+  &#128218; <strong>Implementação prática:</strong> os detalhes de como filtrar e persistir esse universo estão nos
+  <strong>Colabs 1 e 2 da camada Silver</strong>. Basta seguir o código &mdash; a lógica que acabamos
+  de discutir está implementada exatamente ali. Resultado esperado ao rodar o Colab 1:
+  <strong>~214 empresas elígíveis</strong> gravadas na tabela
+  <code>layer_02_silver.n0_empresas_selecionadas</code>.
+</div>
+
+<!-- ============================================================ ATO 2 -->
+<div class="ato-banner">
+  <h3>&#128196; ATO 2 &mdash; O Problema das Versões: Deduplicando a Bronze</h3>
+  <div class="tempo">&#8987; ~20 min &nbsp;|&nbsp; Modo: 10 min conceito + 10 min exercício</div>
+</div>
+
+<div class="conceito-box">
+  <p>A CVM permite que empresas <strong>reapresentem</strong> seus demonstrativos financeiros. Isso é normal
+  e frequente: corrigem erros tipográficos, ajustam classificações, incorporam notas de auditoria.</p>
+  <p>Cada reapresentação <strong>incrementa</strong> o campo <code>"VERSAO"</code>. A lógica é sequencial:</p>
+  <p style="margin-top:8px;"><span class="formula">MAX("VERSAO"::INTEGER) = 3 &rarr; a empresa enviou o documento 3 vezes para aquela data</span></p>
+</div>
+
+<div class="passo"><strong>Por que isso é crítico?</strong> Se não deduplicarmos, a mesma conta pode aparecer
+múltiplas vezes no dataset &mdash; com valores diferentes! Uma soma ingnua contaria o mesmo resultado
+duas ou três vezes, corrompendo qualquer indicador financeiro calculado em seguida.</div>
+
+<div class="passo"><strong>A solução padrão do pipeline:</strong>
+<code>ROW_NUMBER() OVER(PARTITION BY "CNPJ_CIA", "DT_REFER", "CD_CONTA", "DS_CONTA" ORDER BY "VERSAO"::INTEGER DESC)</code>
+&mdash; ficamos apenas com <code>rn = 1</code>, ou seja, a versão mais recente de cada conta.</div>
+
+<div class="exercicio-box">
+  <div class="exercicio-header">&#9997; EXERCÍCIO (10 min) &mdash; Quais empresas mais reapresentam versões?</div>
+  <div class="exercicio-body">
+    <p>Antes de deduplicar, é importante entender <em>quem</em> reapresenta e com que frequência.
+    Escreva <strong>duas queries</strong> usando a tabela <code>layer_01_bronze.dfp_cia_aberta_bpa_con</code>:</p>
+    <p><strong>Query 1 &mdash; Analítica:</strong> por empresa e data (<code>DT_REFER</code>), mostre a versão
+    máxima e a quantidade de versões distintas. Filtre apenas onde há reapresentação (versão &gt; 1).
+    Ordene pela versão máxima decrescente.</p>
+    <p><strong>Query 2 &mdash; Sintética:</strong> por empresa, mostre quantos períodos têm reapresentação,
+    a versão máxima histórica e a média de versões. Ordene pelas que mais reapresentam.</p>
+    <p class="obs">&#128161; Dica: <code>MAX("VERSAO"::INTEGER)</code> precisa de cast porque VERSAO é texto na bronze.</p>
+  </div>
+</div>
+
+<div class="gabarito-box" style="border-color:#bbb;">
+  <div class="gabarito-header" style="background-color:#757575;">&#9998; Sua Resposta &mdash; Query 1: Analítica</div>
+  <div class="gabarito-body" style="background-color:#fafafa;">
+    <div class="espaco-resposta">-- Escreva aqui a Query 1 (analítica por empresa e período)
+
+
+
+</div>
+  </div>
+</div>
+
+<div class="gabarito-box" style="border-color:#bbb;">
+  <div class="gabarito-header" style="background-color:#757575;">&#9998; Sua Resposta &mdash; Query 2: Sintética</div>
+  <div class="gabarito-body" style="background-color:#fafafa;">
+    <div class="espaco-resposta">-- Escreva aqui a Query 2 (sintética por empresa)
+
+
+
+</div>
+  </div>
+</div>
+
+<div class="aviso-box">
+  &#128260; <strong>Gancho para o ATO 3:</strong> as queries funcionam para uma tabela. Mas temos BPA, BPP, DRE, DFC&hellip;
+  Como rodar a mesma análise em todas elas sem copiar e colar o código 4 vezes?
+  A resposta é tornar o código <strong>agnóstico</strong> em Python.
+</div>
+
+<!-- ============================================================ ATO 3 -->
+<div class="ato-banner">
+  <h3>&#129302; ATO 3 &mdash; Python Agnóstico: Uma Query, Várias Tabelas</h3>
+  <div class="tempo">&#8987; ~20 min &nbsp;|&nbsp; Modo: acompanhar professor</div>
+</div>
+
+<div class="conceito-box">
+  <p>Uma query “agnóstica” é aquela que não é escrita para uma tabela específica &mdash; ela usa um
+  <strong>parâmetro</strong> no lugar do nome da tabela. O Python injeta o nome correto a cada
+  iteração do loop.</p>
+  <p>Esse padrão é fundamental em pipelines de dados: evita repetição de código e garante que a
+  mesma lógica se aplique a todos os demonstrativos de forma uniforme. É também a base de como
+  os Colabs da camada Silver funcionam internamente.</p>
+</div>
+
+<h2>Passo 1 &mdash; Conexão com o Banco (padrão do Colab 1)</h2>
+<p>As credenciais ficam em variáveis de ambiente (<code>.env</code>) &mdash; nunca hardcoded no código.
+A engine SQLAlchemy abstrai a conexão e permite trocar o banco sem alterar as queries.</p>
+<div class="code-box">import pandas as pd
+from sqlalchemy import create_engine, text
+from urllib.parse import quote_plus
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+def create_db_engine():
+    user     = quote_plus(os.getenv('DB_USER', 'postgres'))
+    password = quote_plus(os.getenv('DB_PASS', 'password'))
+    host     = os.getenv('DB_HOST', 'localhost')
+    port     = os.getenv('DB_PORT', '5432')
+    dbname   = os.getenv('DB_NAME', 'data_lake')
+    conn_str = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
+    return create_engine(conn_str)
+
+engine = create_db_engine()
+print("&#10003; Engine criada com sucesso.")</div>
+
+<h2>Passo 2 &mdash; Template de Query e Loop Agnóstico</h2>
+
+<div class="gabarito-box" style="border-color:#bbb;">
+  <div class="gabarito-header" style="background-color:#757575;">&#9998; Sua Resposta &mdash; Loop Agnóstico</div>
+  <div class="gabarito-body" style="background-color:#fafafa;">
+    <div class="espaco-resposta">-- Agora é sua vez: escreva um loop que itere sobre uma lista de tabelas e 
+   rode a mesma query deduplicando por empresa, data e conta
+
+
+
+</div>
+  </div>
+</div>
+
+<div class="aviso-box">
+  &#128161; <strong>Por que isso importa?</strong> Quando o pipeline escalar para novas tabelas ou novos
+  exercícios, basta adicionar o nome à lista. A lógica não muda &mdash; e esse é exatamente o
+  objetivo de um pipeline de dados bem projetado: <em>isolar o que muda (o nome da tabela)
+  do que não muda (a lógica de análise)</em>.
+</div>
+
+<div class="aviso-box">
+  &#128260; <strong>Gancho para o ATO 4:</strong> agora que sabemos deduplicar, o próximo problema é
+  mais sutil &mdash; mesmo com dados deduplicados, se somarmos todas as contas de uma empresa,
+  o resultado vai ser errado. Por quê?
+</div>
+
+<!-- ============================================================ ATO 4 -->
+<div class="ato-banner">
+  <h3>&#127795; ATO 4 &mdash; O Problema da Dupla Contagem e a Função IS_LEAF</h3>
+  <div class="tempo">&#8987; ~20 min &nbsp;|&nbsp; Modo: acompanhar professor</div>
+</div>
+
+<div class="conceito-box">
+  <p>A tabela bronze é <strong>plana</strong>: não há relação hierárquica explícita entre contas pai e
+  filho. Isso significa que <code>1</code> (Ativo Total) e <code>1.01</code> (Ativo Circulante) existem
+  como linhas independentes &mdash; e o valor de <code>1.01</code> já está <em>dentro</em> do valor de
+  <code>1</code>. Somar as duas é dupla contagem.</p>
+  <p>Vamos demonstrar esse problema com duas queries antes de apresentar a solução do pipeline.</p>
+</div>
+
+<h2>Query 1 &mdash; Escolhendo uma Empresa para o Exemplo</h2>
+<p>Vejamos as empresas disponíveis e selecionemos uma para trabalhar ao vivo:</p>
+<div class="code-box">SELECT DISTINCT
+    "CNPJ_CIA",
+    "DENOM_CIA",
+    "DT_REFER",
+    MAX("VERSAO"::INTEGER) AS versao_maxima
+FROM layer_01_bronze.dfp_cia_aberta_bpa_con
+GROUP BY "CNPJ_CIA", "DENOM_CIA", "DT_REFER"
+ORDER BY "DT_REFER" DESC
+LIMIT 10;</div>
+<p class="obs">Anote o <code>CNPJ_CIA</code> e a <code>DT_REFER</code> que iremos usar nas próximas queries.</p>
+
+<h2>Query 2 &mdash; O Problema: Somar Sem Critério Dá Errado</h2>
+<p>Com a empresa escolhida, execute a query abaixo. Ela compara dois métodos de totalizar o Ativo
+e mostra por que um está errado:</p>
+<div class="code-box">WITH dedup AS (
+    SELECT *,
+        ROW_NUMBER() OVER(
+            PARTITION BY "CNPJ_CIA", "DT_REFER", "CD_CONTA", "DS_CONTA"
+            ORDER BY "VERSAO"::INTEGER DESC
+        ) AS rn
+    FROM layer_01_bronze.dfp_cia_aberta_bpa_con
+    WHERE "CNPJ_CIA" = '&lt;&lt;SEU_CNPJ&gt;&gt;'
+      AND "DT_REFER"  = '&lt;&lt;SUA_DATA&gt;&gt;'
+),
+contas AS (
+    SELECT *,
+        CASE
+            WHEN "ESCALA_MOEDA" = 'MIL' THEN "VL_CONTA"::NUMERIC * 1000
+            ELSE "VL_CONTA"::NUMERIC
+        END AS vl_normalizado
+    FROM dedup
+    WHERE rn = 1 AND "VL_CONTA"::NUMERIC &lt;&gt; 0
+)
+-- Método 1: soma ingênua de TODAS as contas (ERRADO &mdash; dupla/tripla contagem!)
+SELECT 'SOMA INGÊNU A (errada)'            AS metodo,
+       SUM(vl_normalizado)                 AS resultado
+FROM contas
+UNION ALL
+-- Método 2: apenas o Ativo Total reportado (CORRETO)
+SELECT 'ATIVO TOTAL REAL (CD_CONTA = 1)'   AS metodo,
+       MAX(vl_normalizado)                 AS resultado
+FROM contas
+WHERE "CD_CONTA" = '1';</div>
+
+<div class="aviso-box">
+  &#128161; <strong>O que vocês vão ver:</strong> a soma ingênua pode ser 3x ou 4x maior que o Ativo Total
+  real &mdash; porque soma <code>1</code>, <code>1.01</code>, <code>1.01.01</code>&hellip; tudo junto.
+  A solução é identificar as <strong>folhas da árvore</strong> (contas sem filhos) e somar só elas.
+</div>
+
+<h2>A Solução: <code>processar_leafs_pandas_rapido()</code> e IS_LEAF</h2>
+<div class="passo"><strong>A função usa teoria de conjuntos:</strong> pega todos os <code>CD_CONTA</code>
+reportados pela empresa, gera todos os prefixos ancestrais possíveis e marca como
+<code>IS_LEAF = True</code> toda conta que <em>não é ancestral de nenhuma outra</em>.
+Só as folhas devem ser somadas no Power BI ou em qualquer ferramenta de BI.</div>
+
+<div class="passo"><strong>Contas-pai reconstruídas</strong> recebem <span class="destaque">FLAG_RECONSTRUCAO = True</span>:
+são geradas sinteticamente pelo pipeline somando os filhos. Isso garante integridade da árvore
+hierárquica sem apagar ou alterar valores originais das empresas.
+<strong>Safe Mode V11: nunca sobrescrever valor original auditado</strong>
+(<code>abs(valor) &gt; 0.01</code>). Só preenchemos lacunas.</div>
+
+<div class="passo"><strong>DS_CONTA_REPORTADA</strong> preserva o nome original vindo da CVM &mdash; linha de auditoria
+completa. <strong>FLAG_NORMALIZACAO = True</strong> quando o nome foi padronizado pelo Golden Map.</div>
+
+<div class="aviso-box">
+  &#128218; <strong>Agora sim abrimos o Colab 2:</strong>
+  <code>2_reescrevendo_dfp_tratados_na_camada_silver.ipynb</code>.
+  Todo esse raciocínio que construímos está implementado ali &mdash; vamos acompanhar o código.
+</div>
+
+<!-- ============================================================ ATO 5 -->
+<div class="ato-banner">
+  <h3>&#127959; ATO 5 &mdash; BP, DRE e DFC: Uma Passagem pelos Notebooks</h3>
+  <div class="tempo">&#8987; ~20 min &nbsp;|&nbsp; Modo: professor passa por cima</div>
+</div>
+
+<div class="conceito-box">
+  <p>Os Colabs 3, 4 e 5 aplicam a mesma lógica do Colab 2 para cada demonstrativo específico.
+  Cada um tem suas particularidades contábeis &mdash; vamos destacar os pontos mais importantes
+  de cada um.</p>
+  <p><strong>Recomendamos a leitura individual do código depois da aula.</strong>
+  Podem existir bugs &mdash; e encontrá-los é um ótimo exercício de compreensão do pipeline.</p>
+</div>
+
+<h2>Colab 3 &mdash; Balanço Patrimonial (BP)</h2>
+<span class="tag-nb">&#128215; Notebook 3</span>
+<div class="passo"><strong>Hierarquia determinística:</strong> o nível é determinado pela quantidade de
+dígitos do <code>CD_CONTA</code>. Nível 1 (<code>1</code>), Nível 2 (<code>1.01</code>),
+Nível 3 (<code>1.01.01</code>), Nível 4 (<code>1.01.01.01</code>).</div>
+<div class="passo"><strong>Safe Mode V11:</strong> pais só são reconstruídos se o valor original for nulo ou
+zero. Valores reportados com <code>abs(valor) &gt; 0.01</code> nunca são sobrescritos.</div>
+<div class="passo"><strong>Equação de validação horizontal:</strong>
+<code>Ativo (raiz 1) = Passivo + PL (raiz 2)</code>.
+Diferença &gt; R$&nbsp;1.000 é sinalizada como <code>DESBALANCEADO</code>. O threshold de 1.000 é
+porque a CVM reporta em R$&nbsp;1.000 &mdash; diferenças menores são arredondamento legítimo.</div>
+<div class="passo"><strong>ST_CONTA_FIXA:</strong> preenchido via <code>golden_map_fixa</code> (frequência por
+<code>CD_CONTA</code> no dataset). Contas reconstruídas recebem <code>'S'</code> automaticamente &mdash;
+são raízes fixas da taxonomia CVM.</div>
+
+<h2>Colab 4 &mdash; DRE: A Cascata que Engana</h2>
+<span class="tag-nb">&#128215; Notebook 4</span>
+<div class="passo"><strong>Raiz '3' não existe na CVM:</strong> o menor nível reportado pelas empresas é
+<code>3.XX</code> (dois dígitos). O pipeline <em>nunca</em> cria o agregador <code>CD_CONTA = '3'</code>.</div>
+<div class="passo"><strong>A DRE é uma cascata, não uma árvore aditiva pura:</strong> cada linha intermediária
+já embute todas as anteriores. Somar todos os <code>3.XX</code> gera dupla contagem. A validação
+correta é sempre par a par: um pai e seus filhos diretos, via JOIN.</div>
+<div class="passo"><strong>EBIT = <code>3.05</code>:</strong> &quot;Resultado Antes do Resultado Financeiro e dos
+Tributos&quot;. Conta fixa (<code>ST_CONTA_FIXA = 'S'</code>), comparável entre todas as empresas.</div>
+<div class="passo"><strong>LPA (Lucro Por Ação):</strong> usar <code>3.99.01.01</code> (Básico ON) e
+<code>3.99.02.01</code> (Diluído ON). <strong>Não usar</strong> <code>3.99</code> &mdash; pai
+reconstruído que soma básico + diluído = número sem sentido econômico.</div>
+
+<h2>Colab 5 &mdash; DFC: Equação com Tolerância</h2>
+<span class="tag-nb">&#128215; Notebook 5</span>
+<div class="passo"><strong>Raiz '6' não existe:</strong> a DFC começa em <code>6.01</code>, <code>6.02</code>,
+<code>6.03</code>, <code>6.04</code> (opcional) e <code>6.05</code>.</div>
+<div class="passo"><strong>Equação fundamental:</strong>
+<span class="formula">6.01 + 6.02 + 6.03 (&plusmn; 6.04) = 6.05.02</span>
+Tolerância de 1% para efeito cambial implícito (CPC 03 &sect;32 &mdash; ex: Engie embute o efeito
+cambial em <code>6.05</code> sem reportar <code>6.04</code> separadamente).
+Divergência &lt; 1% com <code>FLAG_RECONSTRUCAO = False</code> &rarr; registrar como <strong>INFO</strong>,
+não erro.</div>
+<div class="passo"><strong><code>6.05.02</code> vs. <code>1.01.01</code>:</strong> sempre usar <code>6.05.02</code> para
+indicadores financeiros &mdash; inclui CDBs/LFTs ≤ 90 dias classificados como caixa equivalente
+pelo CPC 03. <code>1.01.01</code> pode ser menor por esse motivo.</div>
+<div class="passo"><strong>CPC 31 / IFRS 5:</strong> quando <code>6.05.02 &gt; 1.01.01 + 1.01.02</code> com
+<code>FLAG_RECONSTRUCAO = False</code>, provavelmente há ativos de uma subsidiária em processo de
+venda classificados em <code>1.01.08</code> no BP. Tratar como informativo, não erro do pipeline.</div>
+
+<!-- ============================================================ ATO 6 -->
+<div class="ato-banner">
+  <h3>&#9989; ATO 6 &mdash; Testes de Sanidade da Camada Silver</h3>
+  <div class="tempo">&#8987; ~15 min &nbsp;|&nbsp; Modo: professor demonstra</div>
+</div>
+
+<div class="conceito-box">
+  <p>Um pipeline sem testes é uma caixa-preta que você reza para estar certa. O <strong>Colab 6</strong>
+  formaliza as validações que discutimos ao longo da aula como uma suíte de testes de sanidade
+  rodados <em>depois</em> dos Colabs 3, 4 e 5.</p>
+  <p>A ideia é simples: construir a Silver e imediatamente verificar que ela está contabilmente
+  correta. Qualquer falha aponta exatamente qual empresa, qual período e qual demonstrativo.</p>
+</div>
+
+<span class="tag-nb">&#128215; Notebook 6</span>
+
+<h2>O Que o Colab 6 Valida</h2>
+<table class="rep-table">
+  <tr><th>Teste</th><th>Demonstrativo</th><th>Equação / Critério</th><th>Status</th></tr>
+  <tr><td>Equação Fundamental</td><td>BP</td><td>Ativo (raiz 1) = Passivo+PL (raiz 2), diff ≤ R$ 1.000</td><td>OK / DESBALANCEADO</td></tr>
+  <tr><td>Validação Vertical</td><td>BP / DRE</td><td>Pai = Σ Filhos diretos (JOIN por CD_CONTA), diff ≤ R$ 1.000</td><td>OK / DESBALANCEADO</td></tr>
+  <tr><td>Equação da DFC</td><td>DFC</td><td>6.01+6.02+6.03 ≈ 6.05.02, tolerância 1%</td><td>OK / ERRO</td></tr>
+  <tr><td>Cross-check Caixa</td><td>BP × DFC</td><td>6.05.02 ≥ 1.01.01 (dentro de limites do CPC 31)</td><td>OK / INFO</td></tr>
+  <tr><td>IS_LEAF Coverage</td><td>Todos</td><td>Toda empresa/data tem pelo menos 1 conta IS_LEAF = True</td><td>OK / ERRO</td></tr>
+  <tr><td>ST_CONTA_FIXA</td><td>Todos</td><td>Nenhuma linha com IS_LEAF = True tem ST_CONTA_FIXA NULL</td><td>OK / ALERTA</td></tr>
+</table>
+
+<div class="passo"><strong>STATUS_MATH</strong> é persistido na própria tabela Silver: <code>'OK'</code>,
+<code>'DESBALANCEADO'</code> ou <code>'ZERADO'</code>. Isso permite filtrar dados confiáveis
+diretamente no Power BI sem precisar revalidar a cada análise.</div>
+
+<div class="passo"><strong>FLAG_RECONSTRUCAO</strong> permite distinguir o que é dado original da empresa
+do que o pipeline gerou sinteticamente. Em análises críticas de auditoria, prefira sempre
+<code>FLAG_RECONSTRUCAO = False</code> para trabalhar apenas com dados reportados.</div>
+
+<div class="passo"><strong>Granularidade dos erros:</strong> o Colab 6 retorna uma linha por
+(CNPJ_CIA, DT_REFER) que falhou, com o valor da diferença. Isso facilita triagem &mdash; se só
+uma empresa falha para um único período, provavelmente é um caso CPC 31. Se várias empresas
+falham, pode ser um bug no pipeline.</div>
+
+<div class="aviso-box">
+  &#128218; <strong>Próximos passos:</strong> com a Silver validada e limpa, o Colab 7 verifica a
+  viabilidade das variáveis de input para cálculo de indicadores &mdash; é a ponte entre a Silver
+  e a camada Gold (indicadores de valuation: Liquidez, Endividamento, Rentabilidade, Fluxo de Caixa).
+</div>
+
+</div><!-- /a4-page -->
+</body>
+</html>
