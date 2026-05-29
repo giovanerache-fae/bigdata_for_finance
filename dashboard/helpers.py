@@ -56,6 +56,15 @@ def fmt_indicador(valor, fmt):
     return br_num(valor, 2)
 
 
+def aplicar_estilo_grafico(fig):
+    """Estilo padrão de TODOS os gráficos: sem eixo Y, sem linhas de grade,
+    fundo branco. Os valores são lidos pelos rótulos de dados."""
+    fig.update_yaxes(visible=False, showgrid=False, zeroline=False)
+    fig.update_xaxes(showgrid=False, zeroline=False, type="category")
+    fig.update_layout(plot_bgcolor="white", paper_bgcolor="white")
+    return fig
+
+
 # ------------------------------------------------------------------------------
 # Extração do valor de um indicador (com normalização opcional pelo Ativo Total)
 # ------------------------------------------------------------------------------

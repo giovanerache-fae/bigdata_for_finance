@@ -13,6 +13,7 @@ from config import (
 from database import get_painel_setor
 from helpers import (
     fmt_indicador, serie_empresa, serie_benchmark, comparar, br_num,
+    aplicar_estilo_grafico,
 )
 
 
@@ -57,13 +58,17 @@ def _card(container, ind, v_emp, v_bench):
     txt_emp = fmt_indicador(v_emp, ind["fmt"])
     txt_bench = fmt_indicador(v_bench, ind["fmt"])
     delta = _delta_texto(v_emp, v_bench, ind["fmt"]) if verdict else "sem comparação"
+    formula = ind.get("formula", "")
+    # tooltip nativo (hover) com a fórmula, no atributo title
+    tip = f"{ind['nome']} = {formula}"
     html = f"""
-    <div style="border:1px solid #ECECEC;border-left:5px solid {cor};border-radius:10px;
-                padding:12px 14px;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,0,.04);">
-      <div style="font-size:.78rem;color:#6B7280;height:2.2em;line-height:1.1em;">{ind['nome']}</div>
+    <div title="{tip}" style="border:1px solid #ECECEC;border-left:5px solid {cor};border-radius:10px;
+                padding:12px 14px;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,0,.04);cursor:help;">
+      <div style="font-size:.78rem;color:#6B7280;height:2.2em;line-height:1.1em;">{ind['nome']} <span style="color:#C4C4C4;">ⓘ</span></div>
       <div style="font-size:1.7rem;font-weight:700;color:#111827;">{txt_emp}</div>
       <div style="font-size:.8rem;color:{cor};font-weight:600;">{seta} {delta} vs setor</div>
       <div style="font-size:.72rem;color:#9CA3AF;">mediana setor: {txt_bench}</div>
+      <div style="font-size:.68rem;color:#B0B0B0;font-style:italic;">ƒ = {formula}</div>
     </div>
     """
     container.markdown(html, unsafe_allow_html=True)
@@ -174,35 +179,29 @@ def render_indicadores(cnpj, nome, setor, anos):
 
 
 # ------------------------------------------------------------------------------
-def _yaxis_fmt(fmt):
-    if fmt in ("pct", "pct_at"):
-        return dict(tickformat=".0%")
-    if fmt == "mult":
-        return dict(ticksuffix="×")
-    if fmt == "dias":
-        return dict(ticksuffix=" d")
-    return dict()
-
-
 def _grafico_evolucao(ind, emp, bench, anos):
     anos_str = [str(a) for a in anos]
     emp_map = {int(r["ANO"]): r["valor"] for _, r in emp.iterrows()}
     bench_map = {int(r["ANO"]): r["valor"] for _, r in bench.iterrows()}
     y_emp = [emp_map.get(a) for a in anos]
     y_bench = [bench_map.get(a) for a in anos]
+    rot = lambda ys: [fmt_indicador(v, ind["fmt"]) if v is not None else "" for v in ys]
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=anos_str, y=y_bench, name="Mediana setor", mode="lines+markers",
-                             line=dict(color=COR_BENCH, width=2, dash="dash"), marker=dict(size=6)))
-    fig.add_trace(go.Scatter(x=anos_str, y=y_emp, name="Empresa", mode="lines+markers",
-                             line=dict(color=COR_EMPRESA, width=3), marker=dict(size=8)))
+    fig.add_trace(go.Scatter(
+        x=anos_str, y=y_bench, name="Mediana setor", mode="lines+markers+text",
+        line=dict(color=COR_BENCH, width=2, dash="dash"), marker=dict(size=6),
+        text=rot(y_bench), textposition="bottom center", textfont=dict(size=10, color=COR_BENCH)))
+    fig.add_trace(go.Scatter(
+        x=anos_str, y=y_emp, name="Empresa", mode="lines+markers+text",
+        line=dict(color=COR_EMPRESA, width=3), marker=dict(size=8),
+        text=rot(y_emp), textposition="top center", textfont=dict(size=11, color=COR_EMPRESA)))
     fig.update_layout(
         title=dict(text=f"{ind['nome']}", font=dict(size=13)),
-        height=300, plot_bgcolor="white", margin=dict(t=40, b=30, l=10, r=10),
+        height=320, margin=dict(t=40, b=30, l=10, r=10),
         legend=dict(orientation="h", y=-0.18, x=0.5, xanchor="center", font=dict(size=10)),
         hovermode="x unified",
     )
-    fig.update_yaxes(**_yaxis_fmt(ind["fmt"]), gridcolor="#EEE")
-    fig.update_xaxes(type="category")
+    aplicar_estilo_grafico(fig)
     st.plotly_chart(fig, width="stretch")
-    st.caption(ind["desc"])
+    st.caption(f"**ƒ:** {ind.get('formula','')} — {ind['desc']}")

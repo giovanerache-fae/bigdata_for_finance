@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 
 from config import CORES_FAE, COR_EMPRESA, IND_POR_COL
 from database import get_painel_setor
-from helpers import fmt_moeda_compacta, fmt_indicador, br_num, valor_col
+from helpers import fmt_moeda_compacta, fmt_indicador, br_num, valor_col, aplicar_estilo_grafico
 
 
 def _num(df, col, ano):
@@ -66,7 +66,8 @@ def render_visao_geral(cnpj, nome, setor, anos):
         df_v = emp_calc.assign(_v=serie)
         row = df_v[df_v["ANO"] == ano_ref]
         atual = None if row.empty or pd.isna(row["_v"].iloc[0]) else float(row["_v"].iloc[0])
-        c.metric(ind["nome"], fmt_indicador(atual, ind["fmt"]))
+        c.metric(ind["nome"], fmt_indicador(atual, ind["fmt"]),
+                 help=f"Fórmula: {ind.get('formula', '')}")
 
     st.markdown("---")
 
@@ -83,9 +84,11 @@ def render_visao_geral(cnpj, nome, setor, anos):
     fig.add_trace(go.Scatter(x=anos_str, y=lucro, name="Lucro Líquido", mode="lines+markers+text",
                              line=dict(color=COR_EMPRESA, width=3), marker=dict(size=9),
                              text=[fmt_moeda_compacta(v) for v in lucro], textposition="top center"))
-    fig.add_hline(y=0, line_color="black", line_width=1)
-    fig.update_layout(height=430, plot_bgcolor="white", hovermode="x unified",
-                      legend=dict(orientation="h", y=1.12, x=0.5, xanchor="center"))
+    fig.add_hline(y=0, line_color="#ccc", line_width=1)
+    fig.update_layout(height=440, hovermode="x unified",
+                      legend=dict(orientation="h", y=1.12, x=0.5, xanchor="center"),
+                      margin=dict(t=70, b=30, l=10, r=10))
+    aplicar_estilo_grafico(fig)
     st.plotly_chart(fig, width="stretch")
 
     st.info(

@@ -52,17 +52,22 @@ def _selecao_sidebar():
     cnpj = dict(zip(labels, cnpjs))[label_sel]
     nome = df_emp[df_emp["CNPJ_CIA"] == cnpj]["RAZAO_SOCIAL"].iloc[0]
 
-    anos_disp = get_anos_empresa(cnpj)
-    max_n = max(2, min(len(anos_disp), 15))
-    default_n = min(N_ANOS_PADRAO, max_n)
-    if max_n > 2:
-        n_anos = st.sidebar.slider("Nº de exercícios", 2, max_n, default_n)
-    else:
-        n_anos = max_n
-    anos = sorted(anos_disp[:n_anos])
-    if not anos:
+    anos_disp = sorted(get_anos_empresa(cnpj))   # ascendente
+    if not anos_disp:
         st.sidebar.error("Empresa sem exercícios disponíveis na base.")
         st.stop()
+    if len(anos_disp) >= 2:
+        # padrão: últimos N anos; usuário arrasta as pontas para escolher o intervalo
+        default_ini = anos_disp[-N_ANOS_PADRAO] if len(anos_disp) >= N_ANOS_PADRAO else anos_disp[0]
+        ini, fim = st.sidebar.select_slider(
+            "Período (intervalo de exercícios)",
+            options=anos_disp,
+            value=(default_ini, anos_disp[-1]),
+            help="Arraste as pontas para escolher de qual a qual ano analisar.",
+        )
+        anos = [a for a in anos_disp if ini <= a <= fim]
+    else:
+        anos = anos_disp
 
     st.sidebar.markdown("---")
     pagina = st.sidebar.radio(
