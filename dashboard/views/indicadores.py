@@ -74,7 +74,7 @@ def render_indicadores(cnpj, nome, setor, anos):
     st.subheader("🎯 Indicadores do Varejo × Benchmark Setorial")
     st.caption(
         f"**{nome}** · CNPJ {cnpj} · setor **{setor}**  \n"
-        f"Benchmark = **mediana das demais empresas do setor** (a empresa-alvo é excluída do cálculo), por ano."
+        f"Benchmark = **mediana de todas as empresas do setor** (referência fixa — não muda ao trocar a empresa), por ano."
     )
 
     painel = get_painel_setor(setor)
@@ -86,15 +86,15 @@ def render_indicadores(cnpj, nome, setor, anos):
     painel = painel[painel["ANO"].isin(anos)].copy()
     ano_ref = max(anos)
 
-    n_pares = painel[painel["CNPJ_CIA"] != cnpj]["CNPJ_CIA"].nunique()
+    n_emp = painel["CNPJ_CIA"].nunique()
     st.info(f"📌 Ano de referência dos cartões: **{ano_ref}** · "
-            f"Benchmark calculado sobre **{n_pares} empresas** do setor (excluindo a empresa-alvo).")
+            f"Benchmark = mediana de **{n_emp} empresas** do setor (inclui a empresa-alvo; é uma referência fixa).")
 
     # Pré-computa séries por indicador
     series = {}
     for ind in INDICADORES_VAREJO:
         emp = serie_empresa(painel, cnpj, ind)
-        bench = serie_benchmark(painel, cnpj, ind)
+        bench = serie_benchmark(painel, ind)
         series[ind["col"]] = (emp, bench)
 
     # ---------- 1) Cartões de destaque (ano de referência) ----------

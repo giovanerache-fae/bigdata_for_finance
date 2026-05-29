@@ -145,17 +145,18 @@ def serie_empresa(painel, cnpj, ind):
     return sub[["ANO", "valor"]].sort_values("ANO").reset_index(drop=True)
 
 
-def serie_benchmark(painel, cnpj_alvo, ind):
+def serie_benchmark(painel, ind):
     """
-    DataFrame [ANO, valor] com a MEDIANA do indicador das DEMAIS empresas do
-    setor (exclui a empresa-alvo), por ano. É o benchmark do projeto.
-    Também retorna n_pares (nº de empresas com dado em cada ano) na coluna 'n'.
+    DataFrame [ANO, valor] com a MEDIANA setorial do indicador, por ano,
+    considerando TODAS as empresas do setor (INCLUSIVE a empresa-alvo).
+    Assim o benchmark é uma referência fixa do setor: não muda ao trocar a
+    empresa selecionada. Coluna 'n' = nº de empresas com valor em cada ano.
     """
-    pares = painel[painel["CNPJ_CIA"] != cnpj_alvo].copy()
-    if pares.empty:
+    if painel.empty:
         return pd.DataFrame(columns=["ANO", "valor", "n"])
-    pares["_v"] = valor_col(pares, ind)
-    g = pares.dropna(subset=["_v"]).groupby("ANO")["_v"]
+    base = painel.copy()
+    base["_v"] = valor_col(base, ind)
+    g = base.dropna(subset=["_v"]).groupby("ANO")["_v"]
     out = g.median().reset_index().rename(columns={"_v": "valor"})
     out["n"] = g.size().values
     return out.sort_values("ANO").reset_index(drop=True)

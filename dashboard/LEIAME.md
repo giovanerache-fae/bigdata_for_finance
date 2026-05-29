@@ -69,9 +69,10 @@ varejistas (giro de estoque, prazos e autofinanciamento operacional).
 
 ### Benchmark
 
-Para cada indicador e ano, o benchmark é a **mediana das demais empresas do setor**
-(a empresa-alvo é **excluída** do cálculo). A mediana é robusta a outliers — mesma
-metodologia do notebook `03_gold/1_benchmarking_indicadores_financeiros.ipynb`.
+Para cada indicador e ano, o benchmark é a **mediana de todas as empresas do setor**
+(a empresa-alvo **é incluída** no cálculo). Assim o benchmark é uma **referência fixa
+do setor**: não muda quando se troca a empresa selecionada. A mediana é robusta a
+outliers — mesma metodologia do notebook `03_gold/1_benchmarking_indicadores_financeiros.ipynb`.
 Os indicadores de capital de giro (CGL, NCG, ST) são normalizados pelo **Ativo Total**
 (% do AT) para comparar empresas de portes diferentes.
 
