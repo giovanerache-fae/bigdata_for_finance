@@ -75,7 +75,7 @@ def render_explorer_page():
             tab1, tab2, tab3 = st.tabs(["📄 Dados Brutos", "📊 Visualização Rápida", "🔍 Estrutura"])
             
             with tab1:
-                st.dataframe(df, use_container_width=True)
+                st.dataframe(df, width="stretch")
                 st.download_button("Baixar CSV", df.to_csv(index=False).encode('utf-8'), f"{selected_table}.csv", "text/csv")
                 
             with tab2:
@@ -114,7 +114,7 @@ def render_explorer_page():
 
                         if fig:
                             fig.update_traces(marker_color=CORES_FAE['roxo'])
-                            st.plotly_chart(fig, use_container_width=True)
+                            st.plotly_chart(fig, width="stretch")
                             
                     except Exception as e:
                         st.error(f"Não foi possível gerar o gráfico: {e}")

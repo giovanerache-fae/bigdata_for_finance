@@ -46,9 +46,9 @@ def render_monitoring_page():
         fig.update_traces(textposition="inside", cliponaxis=False, textfont_color='black')
         
         col_graf, col_tab = st.columns([2, 1])
-        with col_graf: st.plotly_chart(fig, use_container_width=True)
+        with col_graf: st.plotly_chart(fig, width="stretch")
         with col_tab:
             st.subheader("🔍 Detalhes Técnicos")
-            st.dataframe(df_auditoria[['nome_tabela', 'linhas_txt', 'total_disco_txt']], use_container_width=True, height=500)
+            st.dataframe(df_auditoria[['nome_tabela', 'linhas_txt', 'total_disco_txt']], width="stretch", height=500)
     else:
         st.warning("⚠️ Nenhuma tabela encontrada. Rode o ETL.")
