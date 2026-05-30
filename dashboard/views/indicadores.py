@@ -43,35 +43,32 @@ def _ultimo_valor(serie, ano):
     return float(row["valor"].iloc[0])
 
 
-def _card(container, ind, v_emp, v_bench):
-    verdict = comparar(v_emp, v_bench, ind["melhor"])
-    cor = {"melhor": COR_MELHOR, "pior": COR_PIOR, "igual": COR_NEUTRO}.get(verdict, COR_NEUTRO)
-    # Seta = direção factual (acima/abaixo da mediana); a COR indica se é bom ou ruim
-    if v_emp is None or v_bench is None or pd.isna(v_emp) or pd.isna(v_bench):
-        seta = "•"
-    elif v_emp > v_bench:
-        seta = "↑"
-    elif v_emp < v_bench:
-        seta = "↓"
-    else:
-        seta = "→"
-    txt_emp = fmt_indicador(v_emp, ind["fmt"])
-    txt_bench = fmt_indicador(v_bench, ind["fmt"])
-    delta = _delta_texto(v_emp, v_bench, ind["fmt"]) if verdict else "sem comparação"
+def _metric_card(container, ind, v_emp, v_bench):
+    """Cartão = st.metric nativo. O tooltip (ícone ⓘ via help=) traz a FÓRMULA
+    e a mediana do setor. O delta colorido mostra a posição vs setor."""
     formula = ind.get("formula", "")
-    # tooltip nativo (hover) com a fórmula, no atributo title
-    tip = f"{ind['nome']} = {formula}"
-    html = f"""
-    <div title="{tip}" style="border:1px solid #ECECEC;border-left:5px solid {cor};border-radius:10px;
-                padding:12px 14px;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,0,.04);cursor:help;">
-      <div style="font-size:.78rem;color:#6B7280;height:2.2em;line-height:1.1em;">{ind['nome']} <span style="color:#C4C4C4;">ⓘ</span></div>
-      <div style="font-size:1.7rem;font-weight:700;color:#111827;">{txt_emp}</div>
-      <div style="font-size:.8rem;color:{cor};font-weight:600;">{seta} {delta} vs setor</div>
-      <div style="font-size:.72rem;color:#9CA3AF;">mediana setor: {txt_bench}</div>
-      <div style="font-size:.68rem;color:#B0B0B0;font-style:italic;">ƒ = {formula}</div>
-    </div>
-    """
-    container.markdown(html, unsafe_allow_html=True)
+    txt_bench = fmt_indicador(v_bench, ind["fmt"])
+    ajuda = f"Fórmula: {formula}\n\nMediana do setor: {txt_bench}"
+    val = fmt_indicador(v_emp, ind["fmt"])
+
+    if v_emp is None or v_bench is None or pd.isna(v_emp) or pd.isna(v_bench):
+        container.metric(ind["nome"], val, help=ajuda, border=True)
+        return
+
+    diff = v_emp - v_bench
+    if ind["fmt"] in ("pct", "pct_at"):
+        mag = f"{br_num(abs(diff) * 100, 1)} p.p."
+    elif ind["fmt"] == "mult":
+        mag = f"{br_num(abs(diff), 2)}×"
+    elif ind["fmt"] == "dias":
+        mag = f"{br_num(abs(diff), 0)} d"
+    else:
+        mag = br_num(abs(diff), 2)
+    sinal = "+" if diff >= 0 else "-"                      # ascii: o Streamlit infere a cor pelo sinal
+    delta = f"{sinal}{mag} vs setor"
+    # 'maior é melhor' -> sobe=verde (normal); 'menor é melhor' -> desce=verde (inverse)
+    dcolor = "normal" if ind["melhor"] == "maior" else "inverse"
+    container.metric(ind["nome"], val, delta=delta, delta_color=dcolor, help=ajuda, border=True)
 
 
 # ------------------------------------------------------------------------------
@@ -102,64 +99,29 @@ def render_indicadores(cnpj, nome, setor, anos):
         bench = serie_benchmark(painel, ind)
         series[ind["col"]] = (emp, bench)
 
-    # ---------- 1) Cartões de destaque (ano de referência) ----------
-    st.markdown("##### Destaques")
-    cols = st.columns(3)
-    for i, col_id in enumerate(INDICADORES_DESTAQUE):
-        ind = IND_POR_COL[col_id]
-        emp, bench = series[col_id]
-        v_emp = _ultimo_valor(emp, ano_ref)
-        v_bench = _ultimo_valor(bench, ano_ref)
-        _card(cols[i % 3], ind, v_emp, v_bench)
-        if i % 3 == 2 and i != len(INDICADORES_DESTAQUE) - 1:
-            cols = st.columns(3)
-
-    st.markdown("---")
-
-    # ---------- 2) Tabela-resumo (empresa x setor no ano de referência) ----------
-    st.markdown(f"##### Resumo comparativo — {ano_ref}")
-    linhas = []
-    for ind in INDICADORES_VAREJO:
-        emp, bench = series[ind["col"]]
-        v_emp = _ultimo_valor(emp, ano_ref)
-        v_bench = _ultimo_valor(bench, ano_ref)
-        verdict = comparar(v_emp, v_bench, ind["melhor"])
-        # Posição = factual (valor maior/menor que a mediana); a COR reflete se é BOM
-        if verdict is None:
-            posicao = "— sem dado"
-        elif v_emp > v_bench:
-            posicao = "▲ acima do setor"
-        elif v_emp < v_bench:
-            posicao = "▼ abaixo do setor"
-        else:
-            posicao = "▬ na mediana"
-        # a cor reflete se é BOM
-        linhas.append({
-            "Grupo": ind["grupo"],
-            "Indicador": ind["nome"],
-            "Empresa": fmt_indicador(v_emp, ind["fmt"]),
-            "Mediana Setor": fmt_indicador(v_bench, ind["fmt"]),
-            "Diferença": _delta_texto(v_emp, v_bench, ind["fmt"]),
-            "Posição": posicao,
-            "_verdict": verdict or "",
-        })
-    df_resumo = pd.DataFrame(linhas)
-
-    def _estilo(row):
-        cor = {"melhor": "background-color:#DCFCE7;color:#166534;font-weight:600",
-               "pior": "background-color:#FEE2E2;color:#991B1B;font-weight:600",
-               "igual": "background-color:#F3F4F6;color:#374151"}.get(row["_verdict"], "")
-        return ["" if c != "Posição" else cor for c in df_resumo.columns]
-
-    styler = df_resumo.style.apply(_estilo, axis=1)
-    st.dataframe(
-        styler, hide_index=True, width="stretch",
-        column_order=["Grupo", "Indicador", "Empresa", "Mediana Setor", "Diferença", "Posição"],
-        column_config={"_verdict": None},
-        height=min((len(df_resumo) + 1) * 35 + 3, 760),
+    # ---------- Resumo comparativo — cards por indicador (tooltip de fórmula no ⓘ) ----------
+    st.markdown(
+        f"##### Resumo comparativo — {ano_ref}  "
+        "·  <span style='color:#888;font-size:.82rem'>passe o mouse no ⓘ de cada indicador para ver a fórmula</span>",
+        unsafe_allow_html=True,
     )
-    st.caption("🟩 verde = melhor que a mediana do setor · 🟥 vermelho = pior · "
-               "a direção considera se 'maior' ou 'menor' é melhor para cada indicador.")
+    grupos = [g for g in ORDEM_GRUPOS if any(i["grupo"] == g for i in INDICADORES_VAREJO)]
+    for gi, grupo in enumerate(grupos):
+        if gi > 0:   # linha discreta separando as categorias
+            st.markdown("<hr style='border:none;border-top:1px solid #ECECEC;margin:0.7rem 0 0.4rem;'>",
+                        unsafe_allow_html=True)
+        st.markdown(f"**{grupo}**")
+        inds_g = [i for i in INDICADORES_VAREJO if i["grupo"] == grupo]
+        for j in range(0, len(inds_g), 3):
+            linha = inds_g[j:j + 3]
+            cols = st.columns(3)
+            for k, ind in enumerate(linha):
+                emp, bench = series[ind["col"]]
+                v_emp = _ultimo_valor(emp, ano_ref)
+                v_bench = _ultimo_valor(bench, ano_ref)
+                _metric_card(cols[k], ind, v_emp, v_bench)
+    st.caption("Cada cartão: valor da empresa · variação vs mediana do setor "
+               "(verde = melhor, vermelho = pior, conforme a direção do indicador) · ⓘ = fórmula.")
 
     st.markdown("---")
 
@@ -186,16 +148,23 @@ def _grafico_evolucao(ind, emp, bench, anos):
     y_emp = [emp_map.get(a) for a in anos]
     y_bench = [bench_map.get(a) for a in anos]
     rot = lambda ys: [fmt_indicador(v, ind["fmt"]) if v is not None else "" for v in ys]
+    formula = ind.get("formula", "")
+    # hover (tooltip do gráfico) inclui a fórmula do indicador
+    ht_emp = ("<b>Empresa · " + ind["nome"] + "</b><br>ƒ: " + formula
+              + "<br>%{x}: %{customdata}<extra></extra>")
+    ht_bench = "<b>Mediana do setor</b><br>%{x}: %{customdata}<extra></extra>"
 
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=anos_str, y=y_bench, name="Mediana setor", mode="lines+markers+text",
         line=dict(color=COR_BENCH, width=2, dash="dash"), marker=dict(size=6),
-        text=rot(y_bench), textposition="bottom center", textfont=dict(size=10, color=COR_BENCH)))
+        text=rot(y_bench), textposition="bottom center", textfont=dict(size=15, color=COR_BENCH),
+        customdata=rot(y_bench), hovertemplate=ht_bench))
     fig.add_trace(go.Scatter(
         x=anos_str, y=y_emp, name="Empresa", mode="lines+markers+text",
         line=dict(color=COR_EMPRESA, width=3), marker=dict(size=8),
-        text=rot(y_emp), textposition="top center", textfont=dict(size=11, color=COR_EMPRESA)))
+        text=rot(y_emp), textposition="top center", textfont=dict(size=16, color=COR_EMPRESA),
+        customdata=rot(y_emp), hovertemplate=ht_emp))
     fig.update_layout(
         title=dict(text=f"{ind['nome']}", font=dict(size=13)),
         height=320, margin=dict(t=40, b=30, l=10, r=10),

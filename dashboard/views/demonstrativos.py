@@ -109,10 +109,10 @@ def _render_bp(piv_f, cols_desc, df_raw, anos_cron, divisor, escala_label):
     fig = go.Figure()
     fig.add_bar(x=anos_str, y=total_ativo, name="Ativo Total", marker_color="#2E8B57",
                 text=[fmt_moeda_br(v) for v in total_ativo], textposition="outside",
-                textfont=dict(size=13))
+                textfont=dict(size=19))
     fig.add_bar(x=anos_str, y=total_passivo, name="Passivo + PL", marker_color="#CD5C5C",
                 text=[fmt_moeda_br(v) for v in total_passivo], textposition="outside",
-                textfont=dict(size=13))
+                textfont=dict(size=19))
     fig.update_layout(barmode="group", height=420,
                       title=f"Equilíbrio Patrimonial ({escala_label})",
                       legend=dict(orientation="h", y=1.12, x=0.5, xanchor="center"),
@@ -149,12 +149,12 @@ def _render_linhas_chave(df_raw, anos_cron, divisor, cfg, escala_label):
         cor = paleta[i % len(paleta)]
         if usa_barra and codigo != "6.05.02":
             fig.add_bar(x=anos_str, y=valores, name=rotulo, marker_color=cor,
-                        text=rotulos, textposition="outside", textfont=dict(size=12))
+                        text=rotulos, textposition="outside", textfont=dict(size=18))
         else:
             fig.add_trace(go.Scatter(
                 x=anos_str, y=valores, name=rotulo, mode="lines+markers+text",
                 line=dict(color=cor, width=3), marker=dict(size=8),
-                text=rotulos, textposition="top center", textfont=dict(size=12, color=cor)))
+                text=rotulos, textposition="top center", textfont=dict(size=18, color=cor)))
     fig.update_layout(height=460,
                       legend=dict(orientation="h", y=1.12, x=0.5, xanchor="center"),
                       hovermode="x unified", margin=dict(t=70, b=30, l=10, r=10))

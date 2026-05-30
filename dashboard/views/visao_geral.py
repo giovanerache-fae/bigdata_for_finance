@@ -80,10 +80,12 @@ def render_visao_geral(cnpj, nome, setor, anos):
 
     fig = go.Figure()
     fig.add_bar(x=anos_str, y=receita, name="Receita Líquida", marker_color=CORES_FAE["azul_esverdeado"],
-                text=[fmt_moeda_compacta(v) for v in receita], textposition="outside")
+                text=[fmt_moeda_compacta(v) for v in receita], textposition="outside",
+                textfont=dict(size=17))
     fig.add_trace(go.Scatter(x=anos_str, y=lucro, name="Lucro Líquido", mode="lines+markers+text",
                              line=dict(color=COR_EMPRESA, width=3), marker=dict(size=9),
-                             text=[fmt_moeda_compacta(v) for v in lucro], textposition="top center"))
+                             text=[fmt_moeda_compacta(v) for v in lucro], textposition="top center",
+                             textfont=dict(size=17)))
     fig.add_hline(y=0, line_color="#ccc", line_width=1)
     fig.update_layout(height=440, hovermode="x unified",
                       legend=dict(orientation="h", y=1.12, x=0.5, xanchor="center"),
